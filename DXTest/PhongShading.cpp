@@ -1,41 +1,41 @@
-#define _USE_MATH_DEFINES						// объявляет константу Пи
-#define WIN32_LEAN_AND_MEAN						// исключаем редкоиспользуемые загаловочные файлы windows
+п»ї#define _USE_MATH_DEFINES						// РѕР±СЉСЏРІР»СЏРµС‚ РєРѕРЅСЃС‚Р°РЅС‚Сѓ РџРё
+#define WIN32_LEAN_AND_MEAN						// РёСЃРєР»СЋС‡Р°РµРј СЂРµРґРєРѕРёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ Р·Р°РіР°Р»РѕРІРѕС‡РЅС‹Рµ С„Р°Р№Р»С‹ windows
 
-#include <math.h>								// математические функции
-#include <windows.h>							// типы и функции Windows
-#include <d3d9.h>								// используем Direct3D
+#include <math.h>								// РјР°С‚РµРјР°С‚РёС‡РµСЃРєРёРµ С„СѓРЅРєС†РёРё
+#include <windows.h>							// С‚РёРїС‹ Рё С„СѓРЅРєС†РёРё Windows
+#include <d3d9.h>								// РёСЃРїРѕР»СЊР·СѓРµРј Direct3D
 #include "PhongShading.h"
 
-LPDIRECT3D9						pD3D;			// объект Direct3D
-LPDIRECT3DDEVICE9				pD3DDevice;		// устройство Direct3D (работает с видеокартой)
+LPDIRECT3D9						pD3D;			// РѕР±СЉРµРєС‚ Direct3D
+LPDIRECT3DDEVICE9				pD3DDevice;		// СѓСЃС‚СЂРѕР№СЃС‚РІРѕ Direct3D (СЂР°Р±РѕС‚Р°РµС‚ СЃ РІРёРґРµРѕРєР°СЂС‚РѕР№)
 
-int CameraDist = WND_WIDTH;						// расстояние камеры до начала координат
-int Ambient = 70;								// фоновая освещенность
-float RotAngle;									// текущий угол поворота фигуры
+int CameraDist = WND_WIDTH;						// СЂР°СЃСЃС‚РѕСЏРЅРёРµ РєР°РјРµСЂС‹ РґРѕ РЅР°С‡Р°Р»Р° РєРѕРѕСЂРґРёРЅР°С‚
+int Ambient = 70;								// С„РѕРЅРѕРІР°СЏ РѕСЃРІРµС‰РµРЅРЅРѕСЃС‚СЊ
+float RotAngle;									// С‚РµРєСѓС‰РёР№ СѓРіРѕР» РїРѕРІРѕСЂРѕС‚Р° С„РёРіСѓСЂС‹
 
-Vertex CubeVertex[8];							// вершины куба
-Face CubeFaces[12];								// грани куба
+Vertex CubeVertex[8];							// РІРµСЂС€РёРЅС‹ РєСѓР±Р°
+Face CubeFaces[12];								// РіСЂР°РЅРё РєСѓР±Р°
 
-Vertex ToreVerts[TORE_VERTS];					// Вершины тора
-Face   ToreFaces[TORE_FACES];					// Грани тора
+Vertex ToreVerts[TORE_VERTS];					// Р’РµСЂС€РёРЅС‹ С‚РѕСЂР°
+Face   ToreFaces[TORE_FACES];					// Р“СЂР°РЅРё С‚РѕСЂР°
 
-unsigned short Texture[256][256];				// текстура с картой Фонга
+unsigned short Texture[256][256];				// С‚РµРєСЃС‚СѓСЂР° СЃ РєР°СЂС‚РѕР№ Р¤РѕРЅРіР°
 
-float ZBuffer[WND_WIDTH][WND_HEIGHT];			// w - буфер ( 1/z[i], где z[] - z-буффер)
+float ZBuffer[WND_WIDTH][WND_HEIGHT];			// w - Р±СѓС„РµСЂ ( 1/z[i], РіРґРµ z[] - z-Р±СѓС„С„РµСЂ)
 
-// проектирует точки из 3D пространста в 2D плоскость экрана
+// РїСЂРѕРµРєС‚РёСЂСѓРµС‚ С‚РѕС‡РєРё РёР· 3D РїСЂРѕСЃС‚СЂР°РЅСЃС‚Р° РІ 2D РїР»РѕСЃРєРѕСЃС‚СЊ СЌРєСЂР°РЅР°
 void ProjectVertex(Vertex &v) {
 	v.sx = WND_WIDTH  / 2 + v.rx * CameraDist / (v.rz + CameraDist);
 	v.sy = WND_HEIGHT / 2 - v.ry * CameraDist / (v.rz + CameraDist);
 }
 
-// вращает точку по осям X, Y и Z на заданный угол
+// РІСЂР°С‰Р°РµС‚ С‚РѕС‡РєСѓ РїРѕ РѕСЃСЏРј X, Y Рё Z РЅР° Р·Р°РґР°РЅРЅС‹Р№ СѓРіРѕР»
 void RotateVertex(Vertex *v, float angle) {
 	float mysin = sin(angle);
 	float mycos = cos(angle);
 	float x;
 
-	// Поворачиваем саму точку
+	// РџРѕРІРѕСЂР°С‡РёРІР°РµРј СЃР°РјСѓ С‚РѕС‡РєСѓ
 	v->rx = v->x;                   // ox
 	v->rz = v->z*mycos-v->y*mysin;
 	v->ry = v->z*mysin+v->y*mycos;
@@ -45,7 +45,7 @@ void RotateVertex(Vertex *v, float angle) {
 	x = v->rx;                      // oz
 	v->rx = x*mycos-v->ry*mysin;
 	v->ry = x*mysin+v->ry*mycos;
-	// Поворачиваем нормаль к объекту в этой точке
+	// РџРѕРІРѕСЂР°С‡РёРІР°РµРј РЅРѕСЂРјР°Р»СЊ Рє РѕР±СЉРµРєС‚Сѓ РІ СЌС‚РѕР№ С‚РѕС‡РєРµ
 	v->rnx = v->nx;                 // ox
 	v->rnz = v->nz*mycos-v->ny*mysin;
 	v->rny = v->nz*mysin+v->ny*mycos;
@@ -57,14 +57,14 @@ void RotateVertex(Vertex *v, float angle) {
 	v->rny = x*mysin+v->rny*mycos;
 }
 
-// заносит пиксель в видеопамять
+// Р·Р°РЅРѕСЃРёС‚ РїРёРєСЃРµР»СЊ РІ РІРёРґРµРѕРїР°РјСЏС‚СЊ
 void PutPixelInBackBuf(int x, int y, D3DCOLOR Col, D3DLOCKED_RECT &Rect) {
 	BYTE *pB = (BYTE*) Rect.pBits;
 
 	pB[y * Rect.Pitch + 4*x] = (BYTE)Col;
 }
 
-// рисует затененный по Фонгу полигон
+// СЂРёСЃСѓРµС‚ Р·Р°С‚РµРЅРµРЅРЅС‹Р№ РїРѕ Р¤РѕРЅРіСѓ РїРѕР»РёРіРѕРЅ
 void DrawFace(Face *f, D3DLOCKED_RECT &Rect) {
 	Vertex *a, *b, *c, *Vert;
 	char *dest;
@@ -75,15 +75,15 @@ void DrawFace(Face *f, D3DLOCKED_RECT &Rect) {
 	float x, u, v, z1, du, dv, dz1;
 	float tmp, k;
 
-	// Отсортируем вершины грани по sy
+	// РћС‚СЃРѕСЂС‚РёСЂСѓРµРј РІРµСЂС€РёРЅС‹ РіСЂР°РЅРё РїРѕ sy
 	a = f->v1; b = f->v2; c = f->v3;
 	if(a->sy>b->sy) { Vert = a; a = b; b = Vert; }
 	if(a->sy>c->sy) { Vert = a; a = c; c = Vert; }
 	if(b->sy>c->sy) { Vert = b; b = c; c = Vert; }
-	// Грань нулевой высоты рисовать не будем
+	// Р“СЂР°РЅСЊ РЅСѓР»РµРІРѕР№ РІС‹СЃРѕС‚С‹ СЂРёСЃРѕРІР°С‚СЊ РЅРµ Р±СѓРґРµРј
 	if(floor(c->sy)<=ceil(a->sy)) return;
-	// Посчитаем du/dsx, dv/dsx, d(1/z)/dsx
-	// Считаем по самой длинной линии (т.е. проходящей через среднюю по высоте)
+	// РџРѕСЃС‡РёС‚Р°РµРј du/dsx, dv/dsx, d(1/z)/dsx
+	// РЎС‡РёС‚Р°РµРј РїРѕ СЃР°РјРѕР№ РґР»РёРЅРЅРѕР№ Р»РёРЅРёРё (С‚.Рµ. РїСЂРѕС…РѕРґСЏС‰РµР№ С‡РµСЂРµР· СЃСЂРµРґРЅСЋСЋ РїРѕ РІС‹СЃРѕС‚Рµ)
 	a->z1 = 1/(a->rz+CameraDist);
 	b->z1 = 1/(b->rz+CameraDist);
 	c->z1 = 1/(c->rz+CameraDist);
@@ -132,7 +132,7 @@ void DrawFace(Face *f, D3DLOCKED_RECT &Rect) {
 		EndDz1 = (c->z1-b->z1)/(c->sy-b->sy);
 	}
 
-	// отрисовка грани по строкам
+	// РѕС‚СЂРёСЃРѕРІРєР° РіСЂР°РЅРё РїРѕ СЃС‚СЂРѕРєР°Рј
 	for(CurrSY = (int) ceil(a->sy); CurrSY<ceil(c->sy); CurrSY++){
 		if(CurrSY==ceil(b->sy)){
 			EndX = b->sx;
@@ -144,7 +144,7 @@ void DrawFace(Face *f, D3DLOCKED_RECT &Rect) {
 			EndDv = (c->v-b->v)/(c->sy-b->sy);
 			EndDz1 = (c->z1-b->z1)/(c->sy-b->sy);
 		}
-		// StartX должен находиться левее EndX
+		// StartX РґРѕР»Р¶РµРЅ РЅР°С…РѕРґРёС‚СЊСЃСЏ Р»РµРІРµРµ EndX
 		if(StartX>EndX){
 			x = EndX;
 			u = EndU;
@@ -158,14 +158,14 @@ void DrawFace(Face *f, D3DLOCKED_RECT &Rect) {
 			z1 = StartZ1;
 			Len = int(ceil(EndX)-ceil(StartX));
 		}
-		// Считаем адрес начала строки
+		// РЎС‡РёС‚Р°РµРј Р°РґСЂРµСЃ РЅР°С‡Р°Р»Р° СЃС‚СЂРѕРєРё
 		dest = 0;
 		dest+=CurrSY*WND_WIDTH+(int)ceil(x);
-		// Текстурируем строку
+		// РўРµРєСЃС‚СѓСЂРёСЂСѓРµРј СЃС‚СЂРѕРєСѓ
 		CurrSX = (int)ceil(x);
 		if(Len){
 			while(Len--){
-				// Используем z-буфер для определения видимости текущей точки
+				// РСЃРїРѕР»СЊР·СѓРµРј z-Р±СѓС„РµСЂ РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ РІРёРґРёРјРѕСЃС‚Рё С‚РµРєСѓС‰РµР№ С‚РѕС‡РєРё
 				if(ZBuffer[CurrSY][CurrSX]<=z1) {
 					POINT p = {CurrSX, CurrSY};
 					unsigned char cu=(unsigned char)u;
@@ -182,7 +182,7 @@ void DrawFace(Face *f, D3DLOCKED_RECT &Rect) {
 				CurrSX++;
 			}
 		}
-		// Сдвигаем начальные и конечные значения x/u/v/(1/z)
+		// РЎРґРІРёРіР°РµРј РЅР°С‡Р°Р»СЊРЅС‹Рµ Рё РєРѕРЅРµС‡РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ x/u/v/(1/z)
 		StartX+=StartDX;
 		StartU+=StartDU;
 		StartV+=StartDV;
@@ -194,7 +194,7 @@ void DrawFace(Face *f, D3DLOCKED_RECT &Rect) {
 	}
 }
 
-// рисует фигуру
+// СЂРёСЃСѓРµС‚ С„РёРіСѓСЂСѓ
 void DrawShaded(Face *pFaces, int n) {
 	LPDIRECT3DSURFACE9 BackBuf;
 	D3DLOCKED_RECT Rect;
@@ -205,7 +205,7 @@ void DrawShaded(Face *pFaces, int n) {
 	BackBuf->UnlockRect();
 }
 
-// Сгенерировать карту Фонга
+// РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РєР°СЂС‚Сѓ Р¤РѕРЅРіР°
 void CalcPhongMap() {
 for(int i = 0; i<256; i++)
 	for (int j = 0; j<256; j++)
@@ -213,12 +213,12 @@ for(int i = 0; i<256; i++)
 			Ambient+(255-Ambient)*pow(sin(i*M_PI/256)*sin(j*M_PI/256), 4);
 }
 
-// считает нормаль к граням и вершинам
+// СЃС‡РёС‚Р°РµС‚ РЅРѕСЂРјР°Р»СЊ Рє РіСЂР°РЅСЏРј Рё РІРµСЂС€РёРЅР°Рј
 void CalcNormals(Face *fl, int numfaces, Vertex *vl, unsigned short numverts){
 	float ax, ay, az, bx, by, bz, nx, ny, nz, l;
 	int i;
 
-	// Вычисление нормалей к граням
+	// Р’С‹С‡РёСЃР»РµРЅРёРµ РЅРѕСЂРјР°Р»РµР№ Рє РіСЂР°РЅСЏРј
 	for(i = 0; i<numfaces; i++){
 		ax = fl[i].v3->x-fl[i].v1->x;
 		ay = fl[i].v3->y-fl[i].v1->y;
@@ -229,19 +229,19 @@ void CalcNormals(Face *fl, int numfaces, Vertex *vl, unsigned short numverts){
 		nx = fl[i].nx = ay*bz-az*by;
 		ny = fl[i].ny = az*bx-ax*bz;
 		nz = fl[i].nz = ax*by-ay*bx;
-		// Нормализация
+		// РќРѕСЂРјР°Р»РёР·Р°С†РёСЏ
 		l = sqrt(nx*nx+ny*ny+nz*nz);
 		fl[i].nx/=l;
 		fl[i].ny/=l;
 		fl[i].nz/=l;
 	}
-	// Обнуляем нормали для каждой вершины
+	// РћР±РЅСѓР»СЏРµРј РЅРѕСЂРјР°Р»Рё РґР»СЏ РєР°Р¶РґРѕР№ РІРµСЂС€РёРЅС‹
 	for (i = 0; i<numverts; i++){
 		vl[i].nx = 0;
 		vl[i].ny = 0;
 		vl[i].nz = 0;
 		}
-		// Нормаль каждой вершины - сумма нормалей всех прилежащих граней
+		// РќРѕСЂРјР°Р»СЊ РєР°Р¶РґРѕР№ РІРµСЂС€РёРЅС‹ - СЃСѓРјРјР° РЅРѕСЂРјР°Р»РµР№ РІСЃРµС… РїСЂРёР»РµР¶Р°С‰РёС… РіСЂР°РЅРµР№
 		for (i = 0; i<numfaces; i++){
 			fl[i].v1->nx+=fl[i].nx;
 			fl[i].v1->ny+=fl[i].ny;
@@ -253,7 +253,7 @@ void CalcNormals(Face *fl, int numfaces, Vertex *vl, unsigned short numverts){
 			fl[i].v3->ny+=fl[i].ny;
 			fl[i].v3->nz+=fl[i].nz;
 		}
-		// Нормализуем нормали в каждой вершине
+		// РќРѕСЂРјР°Р»РёР·СѓРµРј РЅРѕСЂРјР°Р»Рё РІ РєР°Р¶РґРѕР№ РІРµСЂС€РёРЅРµ
 		for (i = 0; i<numverts; i++) {
 		l = sqrt(vl[i].nx*vl[i].nx+vl[i].ny*vl[i].ny+vl[i].nz*vl[i].nz);
 		vl[i].nx/=l;
@@ -262,12 +262,12 @@ void CalcNormals(Face *fl, int numfaces, Vertex *vl, unsigned short numverts){
 	}
 }
 
-// считает координаты вершин куба и нормали
+// СЃС‡РёС‚Р°РµС‚ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅ РєСѓР±Р° Рё РЅРѕСЂРјР°Р»Рё
 void InitCube(Face CubeFaces[]) {
 	const int SideLen = 100;
-	unsigned short hs = SideLen>>1, i; // Половинная длина стороны
+	unsigned short hs = SideLen>>1, i; // РџРѕР»РѕРІРёРЅРЅР°СЏ РґР»РёРЅР° СЃС‚РѕСЂРѕРЅС‹
 
-	// Вычисление вершин
+	// Р’С‹С‡РёСЃР»РµРЅРёРµ РІРµСЂС€РёРЅ
 	for(i = 0; i<8; i++){
 		CubeVertex[i].x = (float)-2*hs*(i&1)+hs;
 		CubeVertex[i].y = (float)-2*hs*((i>>1)&1)+hs;
@@ -276,7 +276,7 @@ void InitCube(Face CubeFaces[]) {
 		CubeVertex[i].v = 0;
 	}
 
-	// Вычисление граней
+	// Р’С‹С‡РёСЃР»РµРЅРёРµ РіСЂР°РЅРµР№
 	CubeFaces[0].v1 = &CubeVertex[1];
 	CubeFaces[0].v2 = &CubeVertex[0];
 	CubeFaces[0].v3 = &CubeVertex[2];
@@ -314,17 +314,17 @@ void InitCube(Face CubeFaces[]) {
 	CubeFaces[11].v2 = &CubeVertex[4];
 	CubeFaces[11].v3 = &CubeVertex[0];
 
-	// Вычисление нормалей
+	// Р’С‹С‡РёСЃР»РµРЅРёРµ РЅРѕСЂРјР°Р»РµР№
 	CalcNormals(CubeFaces, 12, CubeVertex, 8);
 }
 
-// считает координаты вершин тора и нормали
+// СЃС‡РёС‚Р°РµС‚ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅ С‚РѕСЂР° Рё РЅРѕСЂРјР°Р»Рё
 void InitTore(int segs1, int segs2) {
 	int tnum_verts,tnum_faces;
 	float a1, a2;
 	int i, j, n;
 
-	// Вычисление вершин
+	// Р’С‹С‡РёСЃР»РµРЅРёРµ РІРµСЂС€РёРЅ
 	tnum_verts = tnum_faces = n = 0;
 	for(i = 0; i<segs1; i++){
 		for(j = 0; j<segs2; j++){
@@ -338,7 +338,7 @@ void InitTore(int segs1, int segs2) {
 			tnum_verts++;
 		}
 	}
-	// Вычисление граней
+	// Р’С‹С‡РёСЃР»РµРЅРёРµ РіСЂР°РЅРµР№
 	for(i = 0; i<segs1; i++){
 		for(j = 0; j<segs2; j++){
 			ToreFaces[tnum_faces].v1 = &ToreVerts[n+j];
@@ -352,16 +352,16 @@ void InitTore(int segs1, int segs2) {
 		}
 		n+=segs2;
 	}
-	// Вычисление нормалей
+	// Р’С‹С‡РёСЃР»РµРЅРёРµ РЅРѕСЂРјР°Р»РµР№
 	CalcNormals(ToreFaces, tnum_faces, ToreVerts, tnum_verts);
 }
 
-// вращает вершины на заданный угол всем 3ем осям
+// РІСЂР°С‰Р°РµС‚ РІРµСЂС€РёРЅС‹ РЅР° Р·Р°РґР°РЅРЅС‹Р№ СѓРіРѕР» РІСЃРµРј 3РµРј РѕСЃСЏРј
 void RotateMesh(Vertex pVerts[], int n) {
 	for(int i = 0; i < n; i++) {
 		RotateVertex(&pVerts[i], RotAngle);
 		ProjectVertex(pVerts[i]);
-		// 128 - половина размера Фонг-карты
+		// 128 - РїРѕР»РѕРІРёРЅР° СЂР°Р·РјРµСЂР° Р¤РѕРЅРі-РєР°СЂС‚С‹
 		pVerts[i].u = (1+pVerts[i].rnx) * 128;
 		pVerts[i].v = (1+pVerts[i].rny) * 128;
 	}

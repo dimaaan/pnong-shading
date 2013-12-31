@@ -1,47 +1,47 @@
-#pragma once
+п»ї#pragma once
 
-// структура c информацией о вершине
+// СЃС‚СЂСѓРєС‚СѓСЂР° c РёРЅС„РѕСЂРјР°С†РёРµР№ Рѕ РІРµСЂС€РёРЅРµ
 struct Vertex {
-	float x, y, z;        // Координаты вершины
-	float rx, ry, rz;     // Преобразованные (повернутые) координаты вершины
-	float sx, sy;         // Экранные (спроецированные) координаты вершины
-	float nx, ny, nz;     // Координаты вектора нормали к вершине
-	float rnx, rny, rnz;  // Преобразованные (повернутые) координаты нормали
-	float cc;             // Освещенность вершины
-	float u, v;           // Соответствующие ей координаты текстуры
+	float x, y, z;        // РљРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅС‹
+	float rx, ry, rz;     // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅС‹Рµ (РїРѕРІРµСЂРЅСѓС‚С‹Рµ) РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅС‹
+	float sx, sy;         // Р­РєСЂР°РЅРЅС‹Рµ (СЃРїСЂРѕРµС†РёСЂРѕРІР°РЅРЅС‹Рµ) РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅС‹
+	float nx, ny, nz;     // РљРѕРѕСЂРґРёРЅР°С‚С‹ РІРµРєС‚РѕСЂР° РЅРѕСЂРјР°Р»Рё Рє РІРµСЂС€РёРЅРµ
+	float rnx, rny, rnz;  // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅС‹Рµ (РїРѕРІРµСЂРЅСѓС‚С‹Рµ) РєРѕРѕСЂРґРёРЅР°С‚С‹ РЅРѕСЂРјР°Р»Рё
+	float cc;             // РћСЃРІРµС‰РµРЅРЅРѕСЃС‚СЊ РІРµСЂС€РёРЅС‹
+	float u, v;           // РЎРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РµР№ РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РµРєСЃС‚СѓСЂС‹
 	float uz, vz, z1;     // u/z, v/z, 1/z
 };
 
-// структура c информацией о грани
+// СЃС‚СЂСѓРєС‚СѓСЂР° c РёРЅС„РѕСЂРјР°С†РёРµР№ Рѕ РіСЂР°РЅРё
 struct Face {
-	Vertex *v1, *v2, *v3; // Указатели на вершины грани
-	float nx, ny, nz;     // Координаты вектора нормали к грани
+	Vertex *v1, *v2, *v3; // РЈРєР°Р·Р°С‚РµР»Рё РЅР° РІРµСЂС€РёРЅС‹ РіСЂР°РЅРё
+	float nx, ny, nz;     // РљРѕРѕСЂРґРёРЅР°С‚С‹ РІРµРєС‚РѕСЂР° РЅРѕСЂРјР°Р»Рё Рє РіСЂР°РЅРё
 };
 
-// размеры окна
+// СЂР°Р·РјРµСЂС‹ РѕРєРЅР°
 const int WND_WIDTH = 640;
 const int WND_HEIGHT = 480;
 
-// Глобальные перемнные
+// Р“Р»РѕР±Р°Р»СЊРЅС‹Рµ РїРµСЂРµРјРЅРЅС‹Рµ
 extern LPDIRECT3D9				pD3D;
 extern LPDIRECT3DDEVICE9		pD3DDevice;
 extern float RotAngle;	
 
-const int TORE_VERTS = 25;					// количество вершин в торе
-const int TORE_FACES = 50;					// количество граней в торе
-const int TORE_RADIUS = 100;				// Радиус тора
-const int TORE_THICKNESS = 30;				// Толщина тора
-const int CUBE_FACES = 12;					// граней в кубе
-const int CUBE_VERTS = 8;					// вершин в кубе
+const int TORE_VERTS = 25;					// РєРѕР»РёС‡РµСЃС‚РІРѕ РІРµСЂС€РёРЅ РІ С‚РѕСЂРµ
+const int TORE_FACES = 50;					// РєРѕР»РёС‡РµСЃС‚РІРѕ РіСЂР°РЅРµР№ РІ С‚РѕСЂРµ
+const int TORE_RADIUS = 100;				// Р Р°РґРёСѓСЃ С‚РѕСЂР°
+const int TORE_THICKNESS = 30;				// РўРѕР»С‰РёРЅР° С‚РѕСЂР°
+const int CUBE_FACES = 12;					// РіСЂР°РЅРµР№ РІ РєСѓР±Рµ
+const int CUBE_VERTS = 8;					// РІРµСЂС€РёРЅ РІ РєСѓР±Рµ
 
 extern Face CubeFaces[12];
-extern Vertex CubeVertex[8];					// вершины куба
+extern Vertex CubeVertex[8];					// РІРµСЂС€РёРЅС‹ РєСѓР±Р°
 extern Face ToreFaces[TORE_FACES];
 extern Vertex ToreVerts[TORE_VERTS];
 
 extern float ZBuffer[WND_WIDTH][WND_HEIGHT];
 
-// объявления используемых функций
+// РѕР±СЉСЏРІР»РµРЅРёСЏ РёСЃРїРѕР»СЊР·СѓРµРјС‹С… С„СѓРЅРєС†РёР№
 void InitCube(Face CubeFaces[]);
 void RotateMesh(Vertex pVerts[], int n);
 void DrawShaded(Face *pFaces, int n);

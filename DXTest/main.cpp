@@ -1,64 +1,64 @@
-#define WIN32_LEAN_AND_MEAN
+п»ї#define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
 #include <d3d9.h>
 #include "PhongShading.h"
 
 #define WND_CLS_NAME	"Direct3D Window"
-#define WND_CAPTION		"Затенение по Фонгу (нажмите ввод для др. фигуры)"
+#define WND_CAPTION		"Р—Р°С‚РµРЅРµРЅРёРµ РїРѕ Р¤РѕРЅРіСѓ (РЅР°Р¶РјРёС‚Рµ РІРІРѕРґ РґР»СЏ РґСЂ. С„РёРіСѓСЂС‹)"
 
 HWND hWnd;
 
-// если истина рисуем куб, ложь - тор
+// РµСЃР»Рё РёСЃС‚РёРЅР° СЂРёСЃСѓРµРј РєСѓР±, Р»РѕР¶СЊ - С‚РѕСЂ
 bool DrawCube = true;
 
 //--------------------------------------------------------------------------------------------
-// процедура отрисовки
+// РїСЂРѕС†РµРґСѓСЂР° РѕС‚СЂРёСЃРѕРІРєРё
 void Render() {
 
-	// очищаем z-буффер
+	// РѕС‡РёС‰Р°РµРј z-Р±СѓС„С„РµСЂ
 	for(int i = 0; i<WND_WIDTH; i++) {
 		for(int q = 0; q<WND_HEIGHT; q++) ZBuffer[i][q] = 0;
 	}
 
-	RotAngle += 0.005f; // увеличиваем угол поворота
-	// очищаем экран
+	RotAngle += 0.005f; // СѓРІРµР»РёС‡РёРІР°РµРј СѓРіРѕР» РїРѕРІРѕСЂРѕС‚Р°
+	// РѕС‡РёС‰Р°РµРј СЌРєСЂР°РЅ
 	pD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0);
 
-	if(DrawCube) { // вращаем и рисуем куб
+	if(DrawCube) { // РІСЂР°С‰Р°РµРј Рё СЂРёСЃСѓРµРј РєСѓР±
 		RotateMesh(CubeVertex, CUBE_VERTS);
 		DrawShaded(CubeFaces, CUBE_FACES);
 	}
-	else {			// вращаем и рисуем тор
+	else {			// РІСЂР°С‰Р°РµРј Рё СЂРёСЃСѓРµРј С‚РѕСЂ
 		RotateMesh(ToreVerts, TORE_VERTS);
 		DrawShaded(ToreFaces, TORE_FACES);
 	}
 
-	// показываем кадр на экране
+	// РїРѕРєР°Р·С‹РІР°РµРј РєР°РґСЂ РЅР° СЌРєСЂР°РЅРµ
 	pD3DDevice->Present(NULL, NULL, NULL, NULL);
 }
 //--------------------------------------------------------------------------------------------
-// процедура инициализации Direct3D
+// РїСЂРѕС†РµРґСѓСЂР° РёРЅРёС†РёР°Р»РёР·Р°С†РёРё Direct3D
 void InitDX() {
 	HRESULT hr;
 	D3DPRESENT_PARAMETERS PresentParams;
 	D3DDISPLAYMODE d3ddm;
 	D3DCAPS9 d3dCaps;
 
-	// создаем объект Direct3D
+	// СЃРѕР·РґР°РµРј РѕР±СЉРµРєС‚ Direct3D
 	pD3D = Direct3DCreate9(D3D_SDK_VERSION);
 	if(!pD3D) {
-		MessageBox(hWnd, "DirectX 9 не установлен!", "", MB_OK);
+		MessageBox(hWnd, "DirectX 9 РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ!", "", MB_OK);
 		return;
 	}
 
-	// получаем режим дисплея
+	// РїРѕР»СѓС‡Р°РµРј СЂРµР¶РёРј РґРёСЃРїР»РµСЏ
 	hr = pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm);
     if(FAILED(hr)) {
 		return;
 	}
 	
-	// проверяем поддерживается ли режим
+	// РїСЂРѕРІРµСЂСЏРµРј РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ Р»Рё СЂРµР¶РёРј
 	hr = pD3D->CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
 									d3ddm.Format, D3DUSAGE_DEPTHSTENCIL,
 									D3DRTYPE_SURFACE, D3DFMT_D16);
@@ -66,8 +66,8 @@ void InitDX() {
 		return;
 	}
 
-	// заполняем структуру PresentParams, которая содержит различные параметры
-	// отображения
+	// Р·Р°РїРѕР»РЅСЏРµРј СЃС‚СЂСѓРєС‚СѓСЂСѓ PresentParams, РєРѕС‚РѕСЂР°СЏ СЃРѕРґРµСЂР¶РёС‚ СЂР°Р·Р»РёС‡РЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹
+	// РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ
 	memset(&PresentParams, 0, sizeof(PresentParams));
 
     PresentParams.BackBufferFormat       = d3ddm.Format;
@@ -78,21 +78,21 @@ void InitDX() {
     PresentParams.PresentationInterval   = D3DPRESENT_INTERVAL_IMMEDIATE;
 	PresentParams.Flags					 = D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
 	
-	// создаем устрйоство Direct3D
+	// СЃРѕР·РґР°РµРј СѓСЃС‚СЂР№РѕСЃС‚РІРѕ Direct3D
 	hr = pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
 		D3DCREATE_SOFTWARE_VERTEXPROCESSING, &PresentParams, &pD3DDevice);
     if(FAILED(hr)) {
 		return;
 	}
 
-	// считаем карту Фонга
+	// СЃС‡РёС‚Р°РµРј РєР°СЂС‚Сѓ Р¤РѕРЅРіР°
 	CalcPhongMap();
-	// считаем координаты вершин отображаемых фигур
+	// СЃС‡РёС‚Р°РµРј РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅ РѕС‚РѕР±СЂР°Р¶Р°РµРјС‹С… С„РёРіСѓСЂ
 	InitCube(CubeFaces);
 	InitTore(5, 5);
 }
 //--------------------------------------------------------------------------------------------
-// завершает работу DirectX
+// Р·Р°РІРµСЂС€Р°РµС‚ СЂР°Р±РѕС‚Сѓ DirectX
 void ReleaseDX() {
 	if(!pD3DDevice) {
         pD3DDevice->Release();
@@ -105,10 +105,10 @@ void ReleaseDX() {
 	}
 }
 //--------------------------------------------------------------------------------------------
-// оконная процедура
+// РѕРєРѕРЅРЅР°СЏ РїСЂРѕС†РµРґСѓСЂР°
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch(msg) {
-        case WM_KEYDOWN: // если нажата клавиша
+        case WM_KEYDOWN: // РµСЃР»Рё РЅР°Р¶Р°С‚Р° РєР»Р°РІРёС€Р°
 			switch(wParam) {
 				case VK_ESCAPE:
 					PostQuitMessage(0);
@@ -131,12 +131,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	return 0;
 }
 //--------------------------------------------------------------------------------------------
-// точка входа в программу
+// С‚РѕС‡РєР° РІС…РѕРґР° РІ РїСЂРѕРіСЂР°РјРјСѓ
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     WNDCLASSEX	winClass;
 	MSG			uMsg;
 
-	// создаем окно
+	// СЃРѕР·РґР°РµРј РѕРєРЅРѕ
     memset(&uMsg, 0, sizeof(uMsg));
 	winClass.cbSize        = sizeof(WNDCLASSEX);
 	winClass.lpszClassName = WND_CLS_NAME;
@@ -160,10 +160,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
 
-	// инициализаруем DirectX
+	// РёРЅРёС†РёР°Р»РёР·Р°СЂСѓРµРј DirectX
 	InitDX();
 
-	// запускаем цикл обработки сообщений
+	// Р·Р°РїСѓСЃРєР°РµРј С†РёРєР» РѕР±СЂР°Р±РѕС‚РєРё СЃРѕРѕР±С‰РµРЅРёР№
 	while(uMsg.message != WM_QUIT) {
 		if(PeekMessage(&uMsg, NULL, 0, 0, PM_REMOVE)) {
 			TranslateMessage( &uMsg );
@@ -173,7 +173,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		    Render();
 	}
 
-	// завершаем работу DirectX
+	// Р·Р°РІРµСЂС€Р°РµРј СЂР°Р±РѕС‚Сѓ DirectX
 	ReleaseDX();
 
 	UnregisterClass(WND_CLS_NAME, winClass.hInstance);
