@@ -2,20 +2,20 @@
 
 // структура c информацией о вершине
 struct Vertex {
-	float x, y, z;        // Координаты вершины
-	float rx, ry, rz;     // Преобразованные (повернутые) координаты вершины
-	float sx, sy;         // Экранные (спроецированные) координаты вершины
-	float nx, ny, nz;     // Координаты вектора нормали к вершине
-	float rnx, rny, rnz;  // Преобразованные (повернутые) координаты нормали
-	float cc;             // Освещенность вершины
-	float u, v;           // Соответствующие ей координаты текстуры
-	float uz, vz, z1;     // u/z, v/z, 1/z
+	double x, y, z;        // Координаты вершины
+	double rx, ry, rz;     // Преобразованные (повернутые) координаты вершины
+	double sx, sy;         // Экранные (спроецированные) координаты вершины
+	double nx, ny, nz;     // Координаты вектора нормали к вершине
+	double rnx, rny, rnz;  // Преобразованные (повернутые) координаты нормали
+	double cc;             // Освещенность вершины
+	double u, v;           // Соответствующие ей координаты текстуры
+	double uz, vz, z1;     // u/z, v/z, 1/z
 };
 
 // структура c информацией о грани
 struct Face {
 	Vertex *v1, *v2, *v3; // Указатели на вершины грани
-	float nx, ny, nz;     // Координаты вектора нормали к грани
+	double nx, ny, nz;     // Координаты вектора нормали к грани
 };
 
 // размеры окна
@@ -39,7 +39,7 @@ extern Vertex CubeVertex[8];					// вершины куба
 extern Face ToreFaces[TORE_FACES];
 extern Vertex ToreVerts[TORE_VERTS];
 
-extern float ZBuffer[WND_WIDTH][WND_HEIGHT];
+extern double ZBuffer[WND_WIDTH][WND_HEIGHT];
 
 // объявления используемых функций
 void InitCube(Face CubeFaces[]);

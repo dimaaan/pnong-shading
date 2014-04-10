@@ -21,7 +21,7 @@ Face   ToreFaces[TORE_FACES];					// Грани тора
 
 unsigned short Texture[256][256];				// текстура с картой Фонга
 
-float ZBuffer[WND_WIDTH][WND_HEIGHT];			// w - буфер ( 1/z[i], где z[] - z-буффер)
+double ZBuffer[WND_WIDTH][WND_HEIGHT];			// w - буфер ( 1/z[i], где z[] - z-буффер)
 
 // проектирует точки из 3D пространста в 2D плоскость экрана
 void ProjectVertex(Vertex &v) {
@@ -30,10 +30,10 @@ void ProjectVertex(Vertex &v) {
 }
 
 // вращает точку по осям X, Y и Z на заданный угол
-void RotateVertex(Vertex *v, float angle) {
-	float mysin = sin(angle);
-	float mycos = cos(angle);
-	float x;
+void RotateVertex(Vertex *v, double angle) {
+	double mysin = sin(angle);
+	double mycos = cos(angle);
+	double x;
 
 	// Поворачиваем саму точку
 	v->rx = v->x;                   // ox
@@ -69,11 +69,11 @@ void DrawFace(Face *f, D3DLOCKED_RECT &Rect) {
 	Vertex *a, *b, *c, *Vert;
 	char *dest;
 	int CurrSX, CurrSY, Len;
-	float StartX, EndX, StartU, StartV, EndU, EndV;
-	float StartDX, EndDX, StartDU, StartDV, StartDz1;
-	float EndDU, EndDv, EndDz1, StartZ1, EndZ1;
-	float x, u, v, z1, du, dv, dz1;
-	float tmp, k;
+	double StartX, EndX, StartU, StartV, EndU, EndV;
+	double StartDX, EndDX, StartDU, StartDV, StartDz1;
+	double EndDU, EndDv, EndDz1, StartZ1, EndZ1;
+	double x, u, v, z1, du, dv, dz1;
+	double tmp, k;
 
 	// Отсортируем вершины грани по sy
 	a = f->v1; b = f->v2; c = f->v3;
@@ -209,13 +209,12 @@ void DrawShaded(Face *pFaces, int n) {
 void CalcPhongMap() {
 for(int i = 0; i<256; i++)
 	for (int j = 0; j<256; j++)
-		Texture[i][j] =
-			Ambient+(255-Ambient)*pow(sin(i*M_PI/256)*sin(j*M_PI/256), 4);
+		Texture[i][j] = Ambient + (255 - Ambient) * pow(sin(i * M_PI / 256) * sin(j * M_PI / 256), 4);
 }
 
 // считает нормаль к граням и вершинам
 void CalcNormals(Face *fl, int numfaces, Vertex *vl, unsigned short numverts){
-	float ax, ay, az, bx, by, bz, nx, ny, nz, l;
+	double ax, ay, az, bx, by, bz, nx, ny, nz, l;
 	int i;
 
 	// Вычисление нормалей к граням
@@ -321,7 +320,7 @@ void InitCube(Face CubeFaces[]) {
 // считает координаты вершин тора и нормали
 void InitTore(int segs1, int segs2) {
 	int tnum_verts,tnum_faces;
-	float a1, a2;
+	double a1, a2;
 	int i, j, n;
 
 	// Вычисление вершин

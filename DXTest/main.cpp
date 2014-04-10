@@ -43,7 +43,6 @@ void InitDX() {
 	HRESULT hr;
 	D3DPRESENT_PARAMETERS PresentParams;
 	D3DDISPLAYMODE d3ddm;
-	D3DCAPS9 d3dCaps;
 
 	// создаем объект Direct3D
 	pD3D = Direct3DCreate9(D3D_SDK_VERSION);
